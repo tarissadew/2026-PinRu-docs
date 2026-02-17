@@ -1,21 +1,42 @@
 # System Architecture & Design - PinRu
 
-[cite_start]Bagian ini berisi dokumentasi teknis mengenai rancangan arsitektur sistem, skema database, dan alur kerja aplikasi PinRu.
+Dokumentasi ini berisi rancangan teknis mengenai arsitektur sistem, skema database, dan alur kerja aplikasi PinRu yang telah diimplementasikan.
 
 ## 1. Entity Relationship Diagram (ERD)
-[cite_start]ERD menjelaskan struktur data dan hubungan antar tabel di dalam database, khususnya untuk modul CRUD Master Customer[cite: 173, 196].
-> *Draf/Gambar ERD akan segera diunggah di sini.*
+Struktur data difokuskan pada sinkronisasi antara kapasitas ruangan dan status transaksi peminjaman.
+
+### **Tabel Utama**
+| Tabel | Deskripsi |
+| :--- | :--- |
+| `Rooms` | Menyimpan data aset ruangan, kapasitas total, dan lokasi. |
+| `Bookings` | Menyimpan data transaksi peminjaman dengan status (Pending, Approved, Rejected). |
+| `Users` | Menyimpan identitas pengguna dan peran (Admin/Customer). |
 
 ## 2. System Architecture
-[cite_start]Penjelasan bagaimana komponen Backend (ASP.NET), Frontend (Web), dan Mobile (Flutter/Android) saling berkomunikasi melalui REST API [cite: 7, 182-186].
-- [cite_start]**Backend**: Melayani logika bisnis dan akses database[cite: 230].
-- [cite_start]**Frontend/Mobile**: Antarmuka pengguna untuk interaksi data[cite: 250, 251].
+Sistem PinRu menggunakan arsitektur **Decoupled (Terpisah)** yang memungkinkan skalabilitas dan kemudahan pemeliharaan:
+
+- **Frontend (Client Side)**: Dibangun menggunakan **React (Vite)**. Bertanggung jawab atas antarmuka pengguna, menangani state lokal, dan berkomunikasi dengan server melalui HTTP Client (Axios/Fetch).
+- **Backend (Server Side)**: Dibangun menggunakan **ASP.NET Core 10**. Bertanggung jawab atas seluruh logika bisnis, validasi keamanan, dan pengelolaan data di database.
+- **RESTful API**: Sebagai jembatan komunikasi antara Frontend dan Backend menggunakan format data JSON.
+- **Database (Data Layer)**: Menggunakan **PostgreSQL** untuk penyimpanan data relasional yang persisten.
 
 ## 3. Technology Stack
-- [cite_start]**Framework Backend**: ASP.NET Core[cite: 8, 229].
-- [cite_start]**Database**: PostgreSQL / SQL Server[cite: 231].
-- [cite_start]**Version Control**: Git & GitHub[cite: 3].
-- [cite_start]**Versioning**: Semantic Versioning (SemVer)[cite: 121, 123].
+- **Backend**: C# / ASP.NET Core 10 (Web API).
+- **ORM**: Entity Framework Core.
+- **Frontend**: React 18 (TypeScript) & Vite.
+- **Styling**: Tailwind CSS & Lucide React.
+- **Database**: PostgreSQL.
 
-## 4. Workflows
-[cite_start]Alur kerja pengembangan menggunakan **Git Branching Strategy** (main, develop, feature/*)[cite: 70, 72, 222].
+## 4. Core Business Logic
+Aplikasi ini menerapkan beberapa logika kunci:
+1. **Dynamic Capacity**: Sisa kuota ruangan dihitung secara real-time berdasarkan peminjaman yang berstatus `Approved`.
+2. **Real-time Search**: Fitur pencarian instan untuk mempercepat akses informasi ruangan dan riwayat pinjaman.
+3. **Role-based Access**: Pembedaan tampilan dan fungsi antara Admin (Monitoring & Verifikasi) dan Customer (Booking & Riwayat).
+
+## 5. Workflows
+- **Versioning**: Menggunakan Semantic Versioning (v1.0.0 Backend, v1.0.0 Frontend).
+- **Git Branching**: Pengembangan dilakukan secara terpusat pada branch `main`.
+- **Environment**: Pengembangan dilakukan di lingkungan lokal menggunakan VS Code.
+
+---
+*Terakhir diperbarui: 17 Februari 2026*
